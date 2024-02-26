@@ -1,0 +1,6 @@
+DB_HOST = 'localhost'
+DB_PORT = '5432'
+DB_NAME = 'cloud_db'
+DB_USER = 'cloud_user'
+DB_PASSWORD = 'cloud_db_password'
+MEDIA_ROOT = './storage'

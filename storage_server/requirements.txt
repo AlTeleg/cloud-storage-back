@@ -1,0 +1,6 @@
+Django
+djangorestframework
+django-filter
+psycopg2-binary
+filetype
+gunicorn
