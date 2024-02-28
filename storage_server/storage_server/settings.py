@@ -1,4 +1,3 @@
-from .config import DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD, MEDIA_ROOT
 from .utils import create_log_directory
 import os
 import environ
