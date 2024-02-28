@@ -1,6 +1,7 @@
 Django
 djangorestframework
 django-filter
+django-environ
 psycopg2-binary
 filetype
 gunicorn
