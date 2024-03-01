@@ -14,6 +14,7 @@ from django.conf import settings
 import os
 from datetime import datetime, timedelta, timezone
 from ..logger import logger
+from django.shortcuts import render
 
 
 class RegistrationView(View):
@@ -59,6 +60,9 @@ class RegistrationView(View):
         logger.error(serializer.errors)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def get(self, request):
+        return render(request, 'index.html')
+
 
 class LoginView(View):
     def post(self, request):
@@ -80,6 +84,10 @@ class LoginView(View):
             logger.error('Invalid credentials')
             return JsonResponse({'error': 'Invalid credentials'}, status=401)
 
+    def get(self, request):
+        logger.debug('LoginView.get, rendering page')
+        return render(request, 'index.html')
+
 
 @method_decorator(login_required, name='dispatch')
 class LogoutView(View):
@@ -95,7 +103,12 @@ class LogoutView(View):
 
         logger.debug('Exiting LogoutView.post function and responding '
                      'with "message": "Logged out successfully"')
+
         return JsonResponse({'message': 'Logged out successfully'})
+
+    def get(self, request):
+        logger.debug('LogoutView.get, rendering page')
+        return render(request, 'index.html')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -106,9 +119,9 @@ class HomeView(View):
             logger.error('Access denied')
             return JsonResponse({'error': 'Access denied'}, status=403)
 
-        logger.debug('Exiting LogoutView.post function and responding '
-                     'with "message": "Welcome to your home storage page!"')
-        return JsonResponse({'message': 'Welcome to your home storage page!'})
+        logger.info("Welcome to your home storage page!")
+        logger.debug('Exiting LogoutView.post function and rendering home page')
+        return render(request, 'index.html')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -134,9 +147,9 @@ class AllUsersAdminView(View):
             user_list.append(user_data)
             logger.debug('Finished writing user_data to user_list')
 
-        logger.debug('Exiting AllUsersAdminView.post function and responding '
+        logger.debug('Exiting AllUsersAdminView.post function, rendering page and responding '
                      'with "users": user_list')
-        return JsonResponse({'users': user_list})
+        return render(request, 'index.html', {'users': user_list})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -147,9 +160,9 @@ class AdminView(View):
             logger.error('Access denied')
             return JsonResponse({'error': 'Access denied'}, status=403)
 
-        logger.debug('Exiting AdminView.get function and responding '
-                     'with "message": "Greetings admin!"')
-        return JsonResponse({'message': 'Greetings admin!'})
+        logger.info('Greeting admin!')
+        logger.debug('Exiting AdminView.get function and rendering admin home page')
+        return render(request, 'index.html')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -280,9 +293,9 @@ class AllFilesAdminView(View):
             file_list.append(file_data)
             logger.debug('Finished file_list preparation')
 
-        logger.debug('Exiting AllFilesAdminView.get function and responding '
+        logger.debug('Exiting AllFilesAdminView.get function, rendering page and responding '
                      'with "files": file_list')
-        return JsonResponse({'files': file_list})
+        return render(request, 'index.html', {'files': file_list})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -330,7 +343,12 @@ class CreateUserAdminView(View):
             logger.debug('Exiting AllFilesAdminView.get function and responding '
                          'with "message": "User created"')
             return JsonResponse({'message': 'User created'})
+
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        logger.debug('CreateUserAdminView.get, rendering page')
+        return render(request, 'index.html')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -358,7 +376,7 @@ class DeleteUserAdminView(View):
         return JsonResponse({'error': 'User not found by id'})
 
 
-@method_decorator(login_required(None, 'login', '/login/'), name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class RedirectView(View):
     def get(self):
         logger.debug('Entering RedirectView.get function')

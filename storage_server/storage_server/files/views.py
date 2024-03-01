@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 import os
 from django.conf import settings
 from ..logger import logger
+from django.shortcuts import render
 
 
 @method_decorator(login_required, name='dispatch')
@@ -55,8 +56,8 @@ class ListView(View):
             file_list.append(file_data)
             logger.debug('Finished file_list preparation...')
 
-        logger.debug('Exiting ListView.get function and responding with "files": file_list object')
-        return JsonResponse({'files': file_list})
+        logger.debug('Exiting ListView.get function, rendering page and responding with "files": file_list object')
+        return render(request, 'index.html', {'files': file_list})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -119,6 +120,10 @@ class UploadView(View):
         logger.debug('Exiting UploadView.post function and responding with "message": "File uploaded successfully"')
         return JsonResponse({'message': 'File uploaded successfully'})
 
+    def get(self, request):
+        logger.debug('UploadView.get, rendering page')
+        return render(request, 'index.html')
+
 
 @method_decorator(login_required, name='dispatch')
 class DeleteView(View):
@@ -171,6 +176,10 @@ class RenameView(View):
         logger.error('New name not provided')
         return JsonResponse({'error': 'New name not provided'}, status=400)
 
+    def get(self, request):
+        logger.debug('RenameView.get, rendering page')
+        return render(request, 'index.html')
+
 
 @method_decorator(login_required, name='dispatch')
 class CommentView(View):
@@ -202,6 +211,10 @@ class CommentView(View):
         logger.error('Comment not provided')
         return JsonResponse({'error': 'Comment not provided'}, status=400)
 
+    def get(self, request):
+        logger.debug('CommentView.get, rendering page')
+        return render(request, 'index.html')
+
 
 @method_decorator(login_required, name='dispatch')
 class DownloadView(View):
@@ -230,12 +243,13 @@ class DownloadView(View):
         response['Content-Disposition'] = f'attachment; filename="{file.original_name}"'
         logger.debug('Response with file_data prepared')
 
-        logger.debug('Exiting DownloadView.get function and responding with file_data application/octet-stream')
-        return response
+        logger.debug('Exiting DownloadView.get function, rendering page'
+                     ' and responding with file_data application/octet-stream')
+        return render(request, 'index.html', response)
 
 
 class DownloadSpecialView(View):
-    def get(self, special_link):
+    def get(self, request, special_link):
         logger.debug('Entering DownloadSpecialView.get function')
         logger.debug('Getting file by special_link...')
         file = get_object_or_404(File, special_link=urlparse(special_link).path)
@@ -256,8 +270,9 @@ class DownloadSpecialView(View):
         response['Content-Disposition'] = f'attachment; filename="{file.original_name}"'
         logger.debug('Response with file_data prepared')
 
-        logger.debug('Exiting DownloadSpecialView.get function and responding with file_data application/octet-stream')
-        return response
+        logger.debug('Exiting DownloadSpecialView.get function, rendering page'
+                     ' and responding with file_data application/octet-stream')
+        return render(request, 'index.html', response)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -276,7 +291,7 @@ class DetailView(View):
             return JsonResponse({'error': 'Access denied'}, status=403)
 
         logger.debug('Exiting DetailView.get function and responding with "file": file')
-        return JsonResponse({'file': file})
+        return render(request, 'index.html', {'file': file})
 
 
 @method_decorator(login_required, name='dispatch')
