@@ -1,7 +1,7 @@
 from django.urls import path, include
-from .config import DB_HOST
+from django.conf import settings
 
 urlpatterns = [
-    path(f'${DB_HOST}/', include('storage_server.accounts.urls')),
-    path(f'${DB_HOST}/files/', include('storage_server.files.urls')),
+    path(f'${settings.HOST}/', include('storage_server.accounts.urls')),
+    path(f'${settings.HOST}/files/', include('storage_server.files.urls')),
 ]

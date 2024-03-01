@@ -10,7 +10,7 @@ from hashlib import sha256
 import secrets
 from urllib.parse import urlparse
 import os
-from ..config import MEDIA_ROOT
+from django.conf import settings
 from ..logger import logger
 
 
@@ -80,7 +80,7 @@ class UploadView(View):
         token = sha256(secrets.token_bytes(16)).hexdigest()
         logger.debug('Finished generating token')
         logger.debug('Initiating filename...')
-        filename = os.path.join(MEDIA_ROOT, str(request.user.id), file.name)
+        filename = os.path.join(settings.MEDIA_ROOT, str(request.user.id), file.name)
         logger.debug('Initiated filename')
 
         if os.path.exists(filename):

@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from .models import User
 from ..files.models import File
 from django.db.models import Q
+from django.conf import settings
 import os
 from datetime import datetime, timedelta, timezone
 from ..logger import logger
@@ -33,7 +34,7 @@ class RegistrationView(View):
             new_user = User.objects.create_user(request.data)
             logger.debug('Created new_user from request.data')
             logger.debug('Creating path to user_folder...')
-            user_folder = os.path.join('storage_server', 'storage', str(new_user.id))
+            user_folder = os.path.join(settings.MEDIA_ROOT, str(new_user.id))
             logger.debug('Created path to user_folder')
             logger.debug('Creating user_folder...')
             os.makedirs(user_folder)
@@ -315,7 +316,7 @@ class CreateUserAdminView(View):
             new_user = User.objects.create_user(request.data)
             logger.debug('Created new_user from request.data')
             logger.debug('Creating path to user_folder...')
-            user_folder = os.path.join('storage_server', 'storage', str(new_user.id))
+            user_folder = os.path.join(settings.MEDIA_ROOT, str(new_user.id))
             logger.debug('Created path to user_folder')
             logger.debug('Creating user_folder...')
             os.makedirs(user_folder)

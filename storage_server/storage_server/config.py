@@ -1,6 +1,0 @@
-DB_HOST = 'localhost'
-DB_PORT = '5432'
-DB_NAME = 'django_project_db'
-DB_USER = 'django'
-DB_PASSWORD = 'hei7daiV9pei'
-MEDIA_ROOT = './storage'

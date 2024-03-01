@@ -36,6 +36,7 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
+HOST = env('HOST')
 
 # Application definition
 
@@ -95,7 +96,9 @@ DATABASES = {
     }
 }
 
-MEDIA_ROOT = env('MEDIA_ROOT')
+MEDIA_ROOT = os.path.join(BASE_DIR, '../media')
+
+MEDIA_URL = 'media/'
 
 LOGGING = {
        'version': 1,
