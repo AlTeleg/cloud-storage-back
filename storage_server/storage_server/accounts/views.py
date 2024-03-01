@@ -4,6 +4,7 @@ from django.views import View
 from rest_framework import status
 from .serializers import UserSerializer
 from django.http import JsonResponse
+from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from .models import User
@@ -80,7 +81,7 @@ class LoginView(View):
             return JsonResponse({'error': 'Invalid credentials'}, status=401)
 
 
-@login_required
+@method_decorator(login_required, name='dispatch')
 class LogoutView(View):
     def post(self, request):
         logger.debug('Entering LogoutView.post function')
@@ -97,7 +98,7 @@ class LogoutView(View):
         return JsonResponse({'message': 'Logged out successfully'})
 
 
-@login_required
+@method_decorator(login_required, name='dispatch')
 class HomeView(View):
     def get(self, request):
         logger.debug('Entering HomeView.get function')
@@ -110,7 +111,7 @@ class HomeView(View):
         return JsonResponse({'message': 'Welcome to your home storage page!'})
 
 
-@login_required
+@method_decorator(login_required, name='dispatch')
 class AllUsersAdminView(View):
     def get(self, request):
         logger.debug('Entering AllUsersAdminView.get function')
@@ -138,7 +139,7 @@ class AllUsersAdminView(View):
         return JsonResponse({'users': user_list})
 
 
-@login_required
+@method_decorator(login_required, name='dispatch')
 class AdminView(View):
     def get(self, request):
         logger.debug('Entering AdminView.get function')
@@ -151,7 +152,7 @@ class AdminView(View):
         return JsonResponse({'message': 'Greetings admin!'})
 
 
-@login_required
+@method_decorator(login_required, name='dispatch')
 class AllFilesAdminView(View):
     def get(self, request):
         logger.debug('Entering AllFilesAdminView.get function')
@@ -284,6 +285,7 @@ class AllFilesAdminView(View):
         return JsonResponse({'files': file_list})
 
 
+@method_decorator(login_required, name='dispatch')
 class CreateUserAdminView(View):
     def post(self, request):
         logger.debug('Entering CreateUserAdminView.post function')
@@ -331,7 +333,7 @@ class CreateUserAdminView(View):
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@login_required
+@method_decorator(login_required, name='dispatch')
 class DeleteUserAdminView(View):
     def delete(self, request, user_id):
         logger.debug('Entering DeleteUserAdminView.delete function')
@@ -356,7 +358,7 @@ class DeleteUserAdminView(View):
         return JsonResponse({'error': 'User not found by id'})
 
 
-@login_required(None, 'login', '/login/')
+@method_decorator(login_required(None, 'login', '/login/'), name='dispatch')
 class RedirectView(View):
     def get(self):
         logger.debug('Entering RedirectView.get function')

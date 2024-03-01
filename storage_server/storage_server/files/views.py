@@ -2,6 +2,7 @@ import json
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views import View
 from .models import File
 from ..accounts.models import User
@@ -14,7 +15,7 @@ from django.conf import settings
 from ..logger import logger
 
 
-@login_required
+@method_decorator(login_required, name='dispatch')
 class ListView(View):
     def get(self, request):
         logger.debug('Entering ListView.get function')
@@ -58,7 +59,7 @@ class ListView(View):
         return JsonResponse({'files': file_list})
 
 
-@login_required
+@method_decorator(login_required, name='dispatch')
 class UploadView(View):
     def post(self, request):
         logger.debug('Entering UploadView.post function')
@@ -119,7 +120,7 @@ class UploadView(View):
         return JsonResponse({'message': 'File uploaded successfully'})
 
 
-@login_required
+@method_decorator(login_required, name='dispatch')
 class DeleteView(View):
     def delete(self, request, file_id):
         logger.debug('Entering DeleteView.delete function')
@@ -140,7 +141,7 @@ class DeleteView(View):
         return JsonResponse({'message': 'File deleted successfully'})
 
 
-@login_required
+@method_decorator(login_required, name='dispatch')
 class RenameView(View):
     def put(self, request, file_id):
         logger.debug('Entering RenameView.put function')
@@ -171,7 +172,7 @@ class RenameView(View):
         return JsonResponse({'error': 'New name not provided'}, status=400)
 
 
-@login_required
+@method_decorator(login_required, name='dispatch')
 class CommentView(View):
     def put(self, request, file_id):
         logger.debug('Entering CommentView.put function')
@@ -201,7 +202,8 @@ class CommentView(View):
         logger.error('Comment not provided')
         return JsonResponse({'error': 'Comment not provided'}, status=400)
 
-@login_required
+
+@method_decorator(login_required, name='dispatch')
 class DownloadView(View):
     def get(self, request, file_id):
         logger.debug('Entering DownloadView.get function')
@@ -258,7 +260,7 @@ class DownloadSpecialView(View):
         return response
 
 
-@login_required
+@method_decorator(login_required, name='dispatch')
 class DetailView(View):
     def get(self, request, file_id):
         logger.debug('Entering DetailView.get function')
@@ -277,7 +279,7 @@ class DetailView(View):
         return JsonResponse({'file': file})
 
 
-@login_required
+@method_decorator(login_required, name='dispatch')
 class UserShareView(View):
     def post(self, request, file_id):
         logger.debug('Entering UserShareView.post function')
