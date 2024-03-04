@@ -15,9 +15,11 @@ import os
 from datetime import datetime, timedelta, timezone
 from ..logger import logger
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_protect
 
 
 class RegistrationView(View):
+    @csrf_protect
     def post(self, request):
         logger.debug('Entering RegistrationView.post function')
         logger.debug('Popping is_admin and is_superuser fields if provided somehow...')
@@ -33,7 +35,9 @@ class RegistrationView(View):
         if serializer.is_valid():
             logger.debug('Checked, serializer.is_valid confirmed')
             logger.debug('Creating new_user from request.data...')
-            new_user = User.objects.create_user(request.data)
+            username = request.data.get('username')
+            password = request.data.get('password')
+            new_user = User.objects.create_user(username=username, password=password, **request.data)
             logger.debug('Created new_user from request.data')
             logger.debug('Creating path to user_folder...')
             user_folder = os.path.join(settings.MEDIA_ROOT, str(new_user.id))
@@ -65,6 +69,7 @@ class RegistrationView(View):
 
 
 class LoginView(View):
+    @csrf_protect
     def post(self, request):
         logger.debug('Entering LoginView.post function')
         username = request.POST.get('username')
@@ -79,7 +84,7 @@ class LoginView(View):
 
             logger.debug('Exiting LoginView.post function and responding '
                          'with "message": "Authentication successful"')
-            return JsonResponse({'message': 'Authentication successful'})
+            return redirect('/home/')
         else:
             logger.error('Invalid credentials')
             return JsonResponse({'error': 'Invalid credentials'}, status=401)
@@ -89,7 +94,6 @@ class LoginView(View):
         return render(request, 'index.html')
 
 
-@method_decorator(login_required, name='dispatch')
 class LogoutView(View):
     def post(self, request):
         logger.debug('Entering LogoutView.post function')
@@ -101,10 +105,9 @@ class LogoutView(View):
         logout(request)
         logger.debug('Finished logout user')
 
-        logger.debug('Exiting LogoutView.post function and responding '
-                     'with "message": "Logged out successfully"')
-
-        return JsonResponse({'message': 'Logged out successfully'})
+        logger.debug('Exiting LogoutView.post function and '
+                     'redirecting to main page')
+        return redirect('/')
 
     def get(self, request):
         logger.debug('LogoutView.get, rendering page')
@@ -300,6 +303,7 @@ class AllFilesAdminView(View):
 
 @method_decorator(login_required, name='dispatch')
 class CreateUserAdminView(View):
+    @csrf_protect
     def post(self, request):
         logger.debug('Entering CreateUserAdminView.post function')
         if not (request.user.is_admin or request.user.is_superuser):
