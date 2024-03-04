@@ -148,7 +148,7 @@ class DeleteView(View):
 
 @method_decorator(login_required, name='dispatch')
 class RenameView(View):
-    def put(self, request, file_id):
+    def patch(self, request, file_id):
         logger.debug('Entering RenameView.put function')
         logger.debug('Getting file by id...')
         file = get_object_or_404(File, id=file_id)
@@ -183,7 +183,7 @@ class RenameView(View):
 
 @method_decorator(login_required, name='dispatch')
 class CommentView(View):
-    def put(self, request, file_id):
+    def patch(self, request, file_id):
         logger.debug('Entering CommentView.put function')
         logger.debug('Getting file by id...')
         file = get_object_or_404(File, id=file_id)
@@ -243,9 +243,9 @@ class DownloadView(View):
         response['Content-Disposition'] = f'attachment; filename="{file.original_name}"'
         logger.debug('Response with file_data prepared')
 
-        logger.debug('Exiting DownloadView.get function, rendering page'
+        logger.debug('Exiting DownloadView.get function'
                      ' and responding with file_data application/octet-stream')
-        return render(request, 'index.html', response)
+        return response
 
 
 class DownloadSpecialView(View):
@@ -270,9 +270,9 @@ class DownloadSpecialView(View):
         response['Content-Disposition'] = f'attachment; filename="{file.original_name}"'
         logger.debug('Response with file_data prepared')
 
-        logger.debug('Exiting DownloadSpecialView.get function, rendering page'
+        logger.debug('Exiting DownloadSpecialView.get function'
                      ' and responding with file_data application/octet-stream')
-        return render(request, 'index.html', response)
+        return response
 
 
 @method_decorator(login_required, name='dispatch')
