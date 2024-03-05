@@ -19,7 +19,6 @@ from django.views.decorators.csrf import csrf_protect
 
 
 class RegistrationView(View):
-    @csrf_protect
     def post(self, request):
         logger.debug('Entering RegistrationView.post function')
         logger.debug('Popping is_admin and is_superuser fields if provided somehow...')
