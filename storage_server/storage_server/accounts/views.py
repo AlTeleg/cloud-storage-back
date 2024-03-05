@@ -64,7 +64,6 @@ class RegistrationView(View):
         logger.error(serializer.errors)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @csrf_protect
     def get(self, request):
         return render(request, 'index.html')
 
@@ -90,7 +89,6 @@ class LoginView(View):
             logger.error('Invalid credentials')
             return JsonResponse({'error': 'Invalid credentials'}, status=401)
 
-    @csrf_protect
     def get(self, request):
         logger.debug('LoginView.get, rendering page')
         return render(request, 'index.html')
@@ -159,7 +157,6 @@ class AllUsersAdminView(View):
 
 @method_decorator(login_required, name='dispatch')
 class AdminView(View):
-    @csrf_protect
     def get(self, request):
         logger.debug('Entering AdminView.get function')
         if not (request.user.is_admin or request.user.is_superuser):
