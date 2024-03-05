@@ -16,7 +16,6 @@ from datetime import datetime, timedelta, timezone
 from ..logger import logger
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
-from django.views.decorators.csrf import ensure_csrf_cookie
 from django.middleware.csrf import get_token
 
 
@@ -66,7 +65,6 @@ class RegistrationView(View):
         logger.error(serializer.errors)
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @ensure_csrf_cookie
     def get(self, request):
         csrf_token = get_token(request)
         response = render(request, 'index.html')
@@ -96,7 +94,6 @@ class LoginView(View):
             logger.error('Invalid credentials')
             return JsonResponse({'error': 'Invalid credentials'}, status=401)
 
-    @ensure_csrf_cookie
     def get(self, request):
         csrf_token = get_token(request)
         response = render(request, 'index.html')
@@ -362,7 +359,6 @@ class CreateUserAdminView(View):
 
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @ensure_csrf_cookie
     def get(self, request):
         logger.debug('CreateUserAdminView.get, rendering page')
         return render(request, 'index.html')
