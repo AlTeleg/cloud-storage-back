@@ -165,7 +165,6 @@ class AllUsersAdminView(View):
 
 @method_decorator(login_required, name='dispatch')
 class AdminView(View):
-    @ensure_csrf_cookie
     def get(self, request):
         logger.debug('Entering AdminView.get function')
         if not (request.user.is_admin or request.user.is_superuser):
