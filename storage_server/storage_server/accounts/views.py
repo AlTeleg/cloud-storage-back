@@ -17,6 +17,7 @@ from ..logger import logger
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.middleware.csrf import get_token
 
 
 class RegistrationView(View):
@@ -67,7 +68,11 @@ class RegistrationView(View):
 
     @ensure_csrf_cookie
     def get(self, request):
-        return render(request, 'index.html')
+        csrf_token = get_token(request)
+        response = render(request, 'index.html')
+        response.set_cookie('csrftoken', csrf_token)
+        logger.debug('RegistrationView.get, rendering page and sending csrf_token')
+        return response
 
 
 class LoginView(View):
@@ -93,8 +98,11 @@ class LoginView(View):
 
     @ensure_csrf_cookie
     def get(self, request):
-        logger.debug('LoginView.get, rendering page')
-        return render(request, 'index.html')
+        csrf_token = get_token(request)
+        response = render(request, 'index.html')
+        response.set_cookie('csrftoken', csrf_token)
+        logger.debug('LoginView.get, rendering page and sending csrf_token')
+        return response
 
 
 class LogoutView(View):
@@ -387,7 +395,6 @@ class DeleteUserAdminView(View):
 
 @method_decorator(login_required(login_url='/login/'), name='dispatch')
 class RedirectView(View):
-    @ensure_csrf_cookie
     def get(self):
         logger.debug('Entering RedirectView.get function')
         logger.debug('Exiting RedirectView.get function and redirecting to /home/')
