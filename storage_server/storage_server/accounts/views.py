@@ -22,21 +22,21 @@ class RegistrationView(View):
     def post(self, request):
         logger.debug('Entering RegistrationView.post function')
         logger.debug('Popping is_admin and is_superuser fields if provided somehow...')
-        request.data.pop('is_admin', None)
-        request.data.pop('is_superuser', None)
+        request.POST.pop('is_admin', None)
+        request.POST.pop('is_superuser', None)
         logger.debug('Popped is_admin and is_superuser fields')
 
         logger.debug('Creating serializer based on UserSerializer...')
-        serializer = UserSerializer(data=request.data)
+        serializer = UserSerializer(data=request.POST)
         logger.debug('Created serializer based on UserSerializer')
 
         logger.debug('Checking serializer.is_valid...')
         if serializer.is_valid():
             logger.debug('Checked, serializer.is_valid confirmed')
             logger.debug('Creating new_user from request.data...')
-            username = request.data.get('username')
-            password = request.data.get('password')
-            new_user = User.objects.create_user(username=username, password=password, **request.data)
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            new_user = User.objects.create_user(username=username, password=password, **request.POST)
             logger.debug('Created new_user from request.data')
             logger.debug('Creating path to user_folder...')
             user_folder = os.path.join(settings.MEDIA_ROOT, str(new_user.id))
@@ -318,25 +318,25 @@ class CreateUserAdminView(View):
 
         if permissions == 'admin':
             logger.debug('Setting admin permissions...')
-            request.data.is_admin = True
-            request.data.is_superuser = False
+            request.POST.is_admin = True
+            request.POST.is_superuser = False
             logger.debug('Set admin permissions')
 
         if permissions == 'superuser':
             logger.debug('Setting superuser permissions...')
-            request.data.is_admin = True
-            request.data.is_superuser = True
+            request.POST.is_admin = True
+            request.POST.is_superuser = True
             logger.debug('Set superuser permissions')
 
         logger.debug('Creating serializer based on UserSerializer...')
-        serializer = UserSerializer(data=request.data)
+        serializer = UserSerializer(data=request.POST)
         logger.debug('Created serializer based on UserSerializer')
 
         logger.debug('Checking serializer.is_valid...')
         if serializer.is_valid():
             logger.debug('Checked, serializer.is_valid confirmed')
             logger.debug('Creating new_user from request.data...')
-            new_user = User.objects.create_user(request.data)
+            new_user = User.objects.create_user(request.POST)
             logger.debug('Created new_user from request.data')
             logger.debug('Creating path to user_folder...')
             user_folder = os.path.join(settings.MEDIA_ROOT, str(new_user.id))
