@@ -15,12 +15,10 @@ import os
 from datetime import datetime, timedelta, timezone
 from ..logger import logger
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_protect
 from django.middleware.csrf import get_token
 
 
 class RegistrationView(View):
-    @csrf_protect
     def post(self, request):
         logger.debug('Entering RegistrationView.post function')
         logger.debug('Popping is_admin and is_superuser fields if provided somehow...')
@@ -74,7 +72,6 @@ class RegistrationView(View):
 
 
 class LoginView(View):
-    @csrf_protect
     def post(self, request):
         logger.debug('Entering LoginView.post function')
         username = request.POST.get('username')
@@ -260,7 +257,7 @@ class AllFilesAdminView(View):
 
         elif filter_field == 'last_download_date':
             logger.debug('Filter = last_download_date case')
-            last_download_date = request.GET.get('last_download_date');
+            last_download_date = request.GET.get('last_download_date')
             if last_download_date:
                 logger.debug('Getting files filtered by last_download_date...')
                 files = files.filter(last_download_date=last_download_date)
@@ -311,7 +308,6 @@ class AllFilesAdminView(View):
 
 @method_decorator(login_required, name='dispatch')
 class CreateUserAdminView(View):
-    @csrf_protect
     def post(self, request):
         logger.debug('Entering CreateUserAdminView.post function')
         if not (request.user.is_admin or request.user.is_superuser):
