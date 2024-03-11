@@ -23,7 +23,6 @@ class RegistrationView(View):
         logger.debug('Entering RegistrationView.post function')
         logger.debug('Popping is_admin and is_superuser fields if provided somehow...')
         print(request)
-        print(request.data)
         print(request.POST)
         data = request.POST.copy()
         data.pop('is_admin', None)
