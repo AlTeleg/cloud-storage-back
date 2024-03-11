@@ -37,9 +37,7 @@ class RegistrationView(View):
         if serializer.is_valid():
             logger.debug('Checked, serializer.is_valid confirmed')
             logger.debug('Creating new_user from request.data...')
-            username = data.get('username')
-            password = data.get('password')
-            new_user = User.objects.create_user(username=username, password=password, **data)
+            new_user = User.objects.create_user(data)
             logger.debug('Created new_user from request.data')
             logger.debug('Creating path to user_folder...')
             user_folder = os.path.join(settings.MEDIA_ROOT, str(new_user.id))
@@ -77,8 +75,9 @@ class RegistrationView(View):
 class LoginView(View):
     def post(self, request):
         logger.debug('Entering LoginView.post function')
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        data = json.loads(request.body.decode('utf-8'))
+        username = data.get('username')
+        password = data.get('password')
         logger.debug('Authenticating user...')
         user = authenticate(request, username=username, password=password)
         if user:
@@ -318,7 +317,7 @@ class CreateUserAdminView(View):
             return JsonResponse({'error': 'Access denied'}, status=403)
 
         permissions = request.POST.get('permissions')
-        data = request.POST.cpoy()
+        data = json.loads(request.body.decode('utf-8'))
         if permissions == 'admin':
             logger.debug('Setting admin permissions...')
             data.is_admin = True
