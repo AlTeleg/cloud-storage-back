@@ -25,6 +25,7 @@ class RegistrationView(View):
         data = request.POST.copy()
         data.pop('is_admin', None)
         data.pop('is_superuser', None)
+        print(data)
         logger.debug('Popped is_admin and is_superuser fields')
 
         logger.debug('Creating serializer based on UserSerializer...')
