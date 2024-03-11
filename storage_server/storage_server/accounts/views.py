@@ -24,7 +24,7 @@ class RegistrationView(View):
         logger.debug('Popping is_admin and is_superuser fields if provided somehow...')
         print(request)
         print(request.body.decode('utf-8'))
-        data = request.body.decode('utf-8').copy()
+        data = request.body.decode('utf-8')
         data.pop('is_admin', None)
         data.pop('is_superuser', None)
         print(data)
