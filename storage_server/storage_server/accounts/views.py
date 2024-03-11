@@ -16,13 +16,14 @@ from datetime import datetime, timedelta, timezone
 from ..logger import logger
 from django.shortcuts import render
 from django.middleware.csrf import get_token
+import json
 
 
 class RegistrationView(View):
     def post(self, request):
         logger.debug('Entering RegistrationView.post function')
         logger.debug('Popping is_admin and is_superuser fields if provided somehow...')
-        data = request.body.decode('utf-8')
+        data = json.loads(request.body.decode('utf-8'))
         data.pop('is_admin', None)
         data.pop('is_superuser', None)
         print(data)
