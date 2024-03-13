@@ -52,6 +52,10 @@ class RegistrationView(View):
             logger.debug('Setting new_user.storage_path using user_folder...')
             new_user.storage_path = user_folder
             logger.debug('Set new_user.storage_path using user_folder')
+            logger.debug('Saving new user')
+            new_user.save()
+            logger.debug('New user saved')
+
             logger.debug('Authenticating user...')
             user = authenticate(request, username=new_user.username, password=new_user.password)
             if user:
@@ -358,6 +362,9 @@ class CreateUserAdminView(View):
             logger.debug('Setting new_user.storage_path using user_folder...')
             new_user.storage_path = user_folder
             logger.debug('Set new_user.storage_path using user_folder')
+            logger.debug('Saving new user')
+            new_user.save()
+            logger.debug('New user saved')
 
             logger.debug('Exiting AllFilesAdminView.get function and responding '
                          'with "message": "User created"')
