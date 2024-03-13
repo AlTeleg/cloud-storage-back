@@ -52,12 +52,12 @@ class RegistrationView(View):
             logger.debug('Setting new_user.storage_path using user_folder...')
             new_user.storage_path = user_folder
             logger.debug('Set new_user.storage_path using user_folder')
-            logger.debug('Saving new user')
+            logger.debug('Saving new user...')
             new_user.save()
             logger.debug('New user saved')
 
             logger.debug('Authenticating user...')
-            user = authenticate(request, username=new_user.username, password=new_user.password)
+            user = authenticate(request, username=username, password=password)
             if user:
                 logger.debug('Authenticated user')
                 logger.debug('Starting login user...')
@@ -362,7 +362,7 @@ class CreateUserAdminView(View):
             logger.debug('Setting new_user.storage_path using user_folder...')
             new_user.storage_path = user_folder
             logger.debug('Set new_user.storage_path using user_folder')
-            logger.debug('Saving new user')
+            logger.debug('Saving new user...')
             new_user.save()
             logger.debug('New user saved')
 
