@@ -402,9 +402,9 @@ class DeleteUserAdminView(View):
         return JsonResponse({'error': 'User not found by id'})
 
 
-@method_decorator(login_required(login_url='/login/'), name='dispatch')
+@method_decorator(login_required(login_url='/login'), name='dispatch')
 class RedirectView(View):
-    def get(self):
+    def get(self, request):
         logger.debug('Entering RedirectView.get function')
         logger.debug('Exiting RedirectView.get function and redirecting to /home/')
         return redirect('/home/')
