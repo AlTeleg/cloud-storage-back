@@ -26,7 +26,6 @@ class RegistrationView(View):
         data = json.loads(request.body.decode('utf-8'))
         data.pop('is_admin', None)
         data.pop('is_superuser', None)
-        print(data)
         logger.debug('Popped is_admin and is_superuser fields')
 
         logger.debug('Creating serializer based on UserSerializer...')
@@ -138,7 +137,7 @@ class HomeView(View):
             return JsonResponse({'error': 'Access denied'}, status=403)
 
         logger.info("Welcome to your home storage page!")
-        logger.debug('Exiting LogoutView.post function and rendering home page')
+        logger.debug('Exiting HomeView.get function and rendering home page')
         return render(request, 'index.html')
 
 
