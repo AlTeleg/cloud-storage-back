@@ -26,8 +26,7 @@ class ListView(View):
             logger.debug('Admin/Superuser request')
             logger.debug('User finding...')
             user = get_object_or_404(User, id=user_id)
-            if not user:
-                logger.error('User not found')
+
             logger.debug('Preparing File.objects filtered by user...')
             files = File.objects.filter(user=user)
             logger.debug('Prepared File.objects filtered by user')
@@ -47,7 +46,7 @@ class ListView(View):
         file_list = []
         for file in files:
             file_data = {
-                'file_name': file.file_name,
+                'name': file.name,
                 'comment': file.comment,
                 'size': file.size,
                 'upload_date': str(file.upload_date),
@@ -131,8 +130,6 @@ class DeleteView(View):
         logger.debug('Entering DeleteView.delete function')
         logger.debug('Getting file by id...')
         file = get_object_or_404(File, id=file_id)
-        if not file:
-            logger.error('File not found')
 
         logger.debug('Got file')
 
@@ -152,8 +149,6 @@ class RenameView(View):
         logger.debug('Entering RenameView.put function')
         logger.debug('Getting file by id...')
         file = get_object_or_404(File, id=file_id)
-        if not file:
-            logger.error('File not found')
 
         logger.debug('Got file')
 
@@ -187,8 +182,6 @@ class CommentView(View):
         logger.debug('Entering CommentView.put function')
         logger.debug('Getting file by id...')
         file = get_object_or_404(File, id=file_id)
-        if not file:
-            logger.error('File not found')
 
         logger.debug('Got file')
 
@@ -222,8 +215,6 @@ class DownloadView(View):
         logger.debug('Entering DownloadView.get function')
         logger.debug('Getting file by id...')
         file = get_object_or_404(File, id=file_id)
-        if not file:
-            logger.error('File not found')
 
         logger.debug('Got file')
 
@@ -239,7 +230,7 @@ class DownloadView(View):
         logger.debug('File saved')
 
         logger.debug('Preparing response with file_data...')
-        response = HttpResponse(file.file_data, content_type='application/octet-stream')
+        response = HttpResponse(file.data, content_type='application/octet-stream')
         response['Content-Disposition'] = f'attachment; filename="{file.original_name}"'
         logger.debug('Response with file_data prepared')
 
@@ -253,8 +244,6 @@ class DownloadSpecialView(View):
         logger.debug('Entering DownloadSpecialView.get function')
         logger.debug('Getting file by special_link...')
         file = get_object_or_404(File, special_link=urlparse(special_link).path)
-        if not file:
-            logger.error('File not found')
 
         logger.debug('Got file')
 
@@ -281,8 +270,6 @@ class DetailView(View):
         logger.debug('Entering DetailView.get function')
         logger.debug('Getting file by id...')
         file = get_object_or_404(File, id=file_id)
-        if not file:
-            logger.error('File not found')
 
         logger.debug('Got file')
 
@@ -300,8 +287,6 @@ class UserShareView(View):
         logger.debug('Entering UserShareView.post function')
         logger.debug('Getting file by id...')
         file = get_object_or_404(File, id=file_id)
-        if not file:
-            logger.error('File not found')
 
         logger.debug('Got file')
 
