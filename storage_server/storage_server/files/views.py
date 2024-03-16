@@ -113,7 +113,7 @@ class UploadView(View):
         logger.debug('Created uploaded file')
 
         logger.debug('Special link creating with token...')
-        uploaded_file.special_link = f'/files/{uploaded_file.id}/download/{token}/'
+        uploaded_file.special_link = f'/files/{uploaded_file.pk}/download/{token}/'
         logger.debug('Special link created with token')
         logger.debug('Uploaded file saving to DB...')
         uploaded_file.save()

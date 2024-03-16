@@ -1,6 +1,7 @@
 from django.db import models
 from ..accounts.models import User
-import uuid
+from hashlib import sha256
+import secrets
 
 
 class File(models.Model):
@@ -20,7 +21,8 @@ class File(models.Model):
         if not self.name:
             self.name = self.original_name
         if not self.special_link:
-            self.special_link = str(uuid.uuid4())
+            token = sha256(secrets.token_bytes(16)).hexdigest()
+            self.special_link = f'/files/{self.pk}/download/{token}/'
         return super().save(*args, **kwargs)
 
     def __str__(self):
