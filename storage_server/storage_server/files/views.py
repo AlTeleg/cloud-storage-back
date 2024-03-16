@@ -63,7 +63,6 @@ class ListView(View):
 
 @method_decorator(login_required, name='dispatch')
 class UploadView(View):
-    @csrf_protect
     def post(self, request):
         logger.debug('Entering UploadView.post function')
         file = request.FILES.get('file')
@@ -298,7 +297,6 @@ class DetailView(View):
 
 @method_decorator(login_required, name='dispatch')
 class UserShareView(View):
-    @csrf_protect
     def post(self, request, file_id):
         logger.debug('Entering UserShareView.post function')
         logger.debug('Getting file by id...')
