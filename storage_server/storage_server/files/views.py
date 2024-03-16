@@ -14,7 +14,6 @@ import os
 from django.conf import settings
 from ..logger import logger
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_protect
 
 
 @method_decorator(login_required, name='dispatch')
