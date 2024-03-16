@@ -105,8 +105,8 @@ class UploadView(View):
             original_name=file.name,
             size=file.size,
             comment=comment,
-            file_data=file_content,
-            file_path=os.path.join(str(request.user.id), file.name)
+            data=file_content,
+            path=os.path.join(str(request.user.id), file.name)
         )
         logger.debug('Created uploaded file')
 

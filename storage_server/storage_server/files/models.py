@@ -5,7 +5,7 @@ import secrets
 
 
 class File(models.Model):
-    file_data = models.BinaryField()
+    data = models.BinaryField()
     user = models.ForeignKey(User, related_name='files', on_delete=models.CASCADE)
     original_name = models.CharField(max_length=50)
     name = models.CharField(max_length=70, default=original_name)
