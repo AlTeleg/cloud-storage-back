@@ -53,7 +53,7 @@ class ListView(View):
                 'last_download_date': str(file.last_download_date)
             }
             file_list.append(file_data)
-            logger.debug('Finished file_list preparation...')
+        logger.debug('Finished file_list preparation...')
 
         logger.debug('Exiting ListView.get function, rendering page and responding with "files": file_list object')
         return render(request, 'index.html', {'files': file_list})
