@@ -8,7 +8,7 @@ class File(models.Model):
     data = models.BinaryField()
     user = models.ForeignKey(User, related_name='files', on_delete=models.CASCADE)
     original_name = models.CharField(max_length=70)
-    name = models.CharField(max_length=70, default=original_name)
+    name = models.CharField(max_length=70, null=True)
     size = models.IntegerField()
     upload_date = models.DateTimeField(auto_now_add=True)
     last_download_date = models.DateTimeField(null=True)
@@ -23,7 +23,7 @@ class File(models.Model):
         if not self.special_link:
             token = sha256(secrets.token_bytes(16)).hexdigest()
             self.special_link = f'/files/{self.pk}/download/{token}/'
-        return super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.original_name
