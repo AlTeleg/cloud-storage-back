@@ -46,6 +46,7 @@ class ListView(View):
         file_list = []
         for file in files:
             file_data = {
+                "id": file.id,
                 "name": file.name,
                 "comment": file.comment,
                 "size": file.size,
