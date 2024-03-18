@@ -278,7 +278,7 @@ class DetailView(View):
         if not file.user == request.user and not (request.user.is_admin or request.user.is_superuser):
             logger.error('Access denied')
             return JsonResponse({'error': 'Access denied'}, status=403)
-
+        file = json.dumps(file)
         logger.debug('Exiting DetailView.get function and responding with "file": file')
         return render(request, 'index.html', {'file': file})
 
