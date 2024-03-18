@@ -2,4 +2,5 @@
         files:'{{ files | default:"null" | safe }}',
         file:'{{ file | default:"null" | safe }}',
         users:'{{ users | default:"null" | safe }}'
-      };</script><div id="root"></div></body></html>
+      };
+      document.getElementById('context').textContent = JSON.stringify(context);</script><div id="root"></div></body></html>
