@@ -46,13 +46,14 @@ class ListView(View):
         file_list = []
         for file in files:
             file_data = {
-                'name': file.name,
-                'comment': file.comment,
-                'size': file.size,
-                'upload_date': str(file.upload_date),
-                'last_download_date': str(file.last_download_date)
+                "name": file.name,
+                "comment": file.comment,
+                "size": file.size,
+                "upload_date": str(file.upload_date),
+                "last_download_date": str(file.last_download_date)
             }
             file_list.append(file_data)
+        file_list = json.dumps(file_list)
         logger.debug('Finished file_list preparation...')
 
         logger.debug('Exiting ListView.get function, rendering page and responding with "files": file_list object')
