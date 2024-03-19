@@ -182,7 +182,7 @@ class AllFilesAdminView(View):
 
         if filter_field == 'user':
             logger.debug('Filter = user_id case')
-            user_id = request.GET.get('user')
+            user_id = request.GET.get('filter_value')
             if user_id and user_id.isdigit():
                 logger.debug('Getting files filtered by user_id...')
                 files = files.filter(user_id=user_id)
@@ -202,7 +202,7 @@ class AllFilesAdminView(View):
 
         elif filter_field == 'original_name':
             logger.debug('Filter = original_name case')
-            original_name = request.GET.get('original_name')
+            original_name = request.GET.get('filter_value')
             if original_name:
                 logger.debug('Getting files filtered by original_name(contains)...')
                 files = files.filter(original_name__icontains=original_name)
@@ -213,7 +213,7 @@ class AllFilesAdminView(View):
 
         elif filter_field == 'name':
             logger.debug('Filter = name case')
-            name = request.GET.get('name')
+            name = request.GET.get('filter_value')
             if name:
                 logger.debug('Getting files filtered by name(contains)...')
                 files = files.filter(name__icontains=name)
@@ -224,7 +224,7 @@ class AllFilesAdminView(View):
 
         elif filter_field == 'size':
             logger.debug('Filter = size case')
-            size = request.GET.get('size')
+            size = request.GET.get('filter_value')
             if size and size.isdigit():
                 logger.debug('Getting files filtered by size(+-10%)...')
                 files = files.filter(Q(size__gte=int(size) * 0.9) & Q(size__lte=int(size) * 1.1))
@@ -235,7 +235,7 @@ class AllFilesAdminView(View):
 
         elif filter_field == 'upload_date':
             logger.debug('Filter = upload_date case')
-            upload_date = request.GET.get('upload_date')
+            upload_date = request.GET.get('filter_value')
             if upload_date:
                 logger.debug('Getting files filtered by upload_date...')
                 files = files.filter(upload_date=upload_date)
@@ -246,7 +246,7 @@ class AllFilesAdminView(View):
 
         elif filter_field == 'last_download_date':
             logger.debug('Filter = last_download_date case')
-            last_download_date = request.GET.get('last_download_date')
+            last_download_date = request.GET.get('filter_value')
             if last_download_date:
                 logger.debug('Getting files filtered by last_download_date...')
                 files = files.filter(last_download_date=last_download_date)
@@ -281,7 +281,7 @@ class AllFilesAdminView(View):
         file_list = []
         for file in files:
             file_data = {
-                'file_name': file.file_name,
+                'file_name': file.name,
                 'comment': file.comment,
                 'size': file.size,
                 'upload_date': str(file.upload_date),
@@ -290,9 +290,9 @@ class AllFilesAdminView(View):
             file_list.append(file_data)
             logger.debug('Finished file_list preparation')
 
-        logger.debug('Exiting AllFilesAdminView.get function, rendering page and responding '
+        logger.debug('Exiting AllFilesAdminView.get function and  responding '
                      'with "files": file_list')
-        return render(request, 'index.html', {'files': file_list})
+        return JsonResponse({'files': file_list})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -409,7 +409,7 @@ class GetUsersAdminView(View):
         return JsonResponse({'users': user_list})
 
 
-@method_decorator(login_required(login_url='/login'), name='dispatch')
+@method_decorator(login_required(login_url='/login', redirect_field_name=None), name='dispatch')
 class RedirectView(View):
     def get(self, request):
         logger.debug('Entering RedirectView.get function')
