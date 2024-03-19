@@ -319,5 +319,5 @@ class GetFileView(View):
             return JsonResponse({'error': 'Access denied'}, status=403)
 
         logger.debug('Exiting GetFileView.get function and responding with "file": file')
-        return JsonResponse({'file': file})
+        return HttpResponse({'file': file}, content_type='application/json')
 
