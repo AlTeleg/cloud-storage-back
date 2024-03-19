@@ -44,7 +44,7 @@ class UploadView(View):
         logger.debug('Finished reading file_content')
         logger.debug('Generating token...')
         token = sha256(secrets.token_bytes(16)).hexdigest()
-        logger.debug('Finished generating token')
+        logger.debug('Finished generating token')cvc
         logger.debug('Initiating filename...')
         filename = os.path.join(settings.MEDIA_ROOT, str(request.user.id), file.name)
         logger.debug('Initiated filename')

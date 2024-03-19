@@ -2,6 +2,8 @@ from django.db import models
 from ..accounts.models import User
 from hashlib import sha256
 import secrets
+import os
+from django.conf import settings
 
 
 class File(models.Model):
@@ -24,3 +26,7 @@ class File(models.Model):
             token = sha256(secrets.token_bytes(16)).hexdigest()
             self.special_link = f'/files/{self.pk}/download/{token}/'
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        os.remove(os.path.join(settings.MEDIA_ROOT, str(self.user.id), self.name))
+        super(File, self).delete(*args, **kwargs)
