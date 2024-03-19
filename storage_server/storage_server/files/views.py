@@ -122,7 +122,7 @@ class RenameView(View):
             logger.error('Access denied')
             return JsonResponse({'error': 'Access denied'}, status=403)
 
-        new_name = request.POST.get('name')
+        new_name = json.loads(request.body).get('name')
         if new_name:
             logger.debug('File name changing...')
             file.name = new_name
@@ -154,7 +154,7 @@ class CommentView(View):
         if not file.user == request.user and not (request.user.is_admin or request.user.is_superuser):
             return JsonResponse({'error': 'Access denied'}, status=403)
 
-        new_comment = request.POST.get('comment')
+        new_comment = json.loads(request.body).get('comment')
         if new_comment:
             logger.debug('File comment changing...')
             file.comment = new_comment
