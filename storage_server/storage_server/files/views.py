@@ -326,7 +326,7 @@ class GetFileView(View):
             'size': file.size,
             'upload_date': str(file.upload_date),
             'last_download_date': str(file.last_download_date),
-            'file.special_link': file.special_link
+            'special_link': file.special_link
         }
 
         logger.debug('Popped data field from file')
