@@ -221,7 +221,7 @@ class DownloadSpecialView(View):
         logger.debug('File saved')
 
         logger.debug('Preparing response with file_data...')
-        response = HttpResponse(file.file_data, content_type='application/octet-stream')
+        response = HttpResponse(file.data, content_type='application/octet-stream')
         response['Content-Disposition'] = f'attachment; filename="{file.original_name}"'
         logger.debug('Response with file_data prepared')
 
@@ -317,7 +317,9 @@ class GetFileView(View):
         if not file.user == request.user and not (request.user.is_admin or request.user.is_superuser):
             logger.error('Access denied')
             return JsonResponse({'error': 'Access denied'}, status=403)
-
+        logger.debug('Popping data field from file...')
+        file.pop('data')
+        logger.debug('Popped data field from file')
         logger.debug('Exiting GetFileView.get function and responding with "file": file')
-        return HttpResponse({'file': file}, content_type='application/json')
+        return JsonResponse({'file': file})
 
