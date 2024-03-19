@@ -24,6 +24,3 @@ class File(models.Model):
             token = sha256(secrets.token_bytes(16)).hexdigest()
             self.special_link = f'/files/{self.pk}/download/{token}/'
         super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.original_name

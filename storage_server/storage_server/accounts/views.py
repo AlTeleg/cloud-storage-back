@@ -145,28 +145,8 @@ class HomeView(View):
 class AllUsersAdminView(View):
     def get(self, request):
         logger.debug('Entering AllUsersAdminView.get function')
-        if not (request.user.is_admin or request.user.is_superuser):
-            logger.error('Access denied')
-            return JsonResponse({'error': 'Access denied'}, status=403)
-        logger.debug('Preparing User.objects...')
-        users = User.objects.all()
-        logger.debug('Prepared User.objects')
-        logger.debug('Preparing user_list...')
-        user_list = []
-        logger.debug('Prepared user_list')
-        logger.debug('Writing user_data to user_list...')
-        for user in users:
-            user_data = {
-                'username': user.username,
-                'full_name': user.full_name,
-                'is_admin': user.is_admin
-            }
-            user_list.append(user_data)
-            logger.debug('Finished writing user_data to user_list')
-
-        logger.debug('Exiting AllUsersAdminView.post function, rendering page and responding '
-                     'with "users": user_list')
-        return render(request, 'index.html', {'users': user_list})
+        logger.debug('Exiting AllUsersAdminView.get function and rendering page')
+        return render(request, 'index.html')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -399,6 +379,34 @@ class DeleteUserAdminView(View):
 
         logger.error('User not found by id')
         return JsonResponse({'error': 'User not found by id'})
+
+
+@method_decorator(login_required(login_url='/login'), name='dispatch')
+class GetUsersAdminView(View):
+    def get(self, request):
+        logger.debug('Entering GetUsersAdminView.get function')
+        if not (request.user.is_admin or request.user.is_superuser):
+            logger.error('Access denied')
+            return JsonResponse({'error': 'Access denied'}, status=403)
+        logger.debug('Preparing User.objects...')
+        users = User.objects.all()
+        logger.debug('Prepared User.objects')
+        logger.debug('Preparing user_list...')
+        user_list = []
+        logger.debug('Prepared user_list')
+        logger.debug('Writing user_data to user_list...')
+        for user in users:
+            user_data = {
+                'username': user.username,
+                'full_name': user.full_name,
+                'is_admin': user.is_admin
+            }
+            user_list.append(user_data)
+            logger.debug('Finished writing user_data to user_list')
+
+        logger.debug('Exiting GetUsersAdminView.get function and responding '
+                     'with "users": user_list')
+        return JsonResponse({'users': user_list})
 
 
 @method_decorator(login_required(login_url='/login'), name='dispatch')

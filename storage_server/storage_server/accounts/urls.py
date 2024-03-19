@@ -11,5 +11,6 @@ urlpatterns = [
     path('admin/files/', views.AllFilesAdminView.as_view(), name='admin-files'),
     path('admin/create-user/', views.CreateUserAdminView.as_view(), name='admin-create-user'),
     path('admin/users/', views.AllUsersAdminView.as_view(), name='admin-users'),
+    path('admin/users/get/', views.GetUsersAdminView.as_view(), name='admin-get-users'),
     path('admin/users/<int:user_id>', views.DeleteUserAdminView.as_view(), name='admin-users')
 ]

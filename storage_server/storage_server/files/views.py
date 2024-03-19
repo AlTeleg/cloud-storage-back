@@ -20,45 +20,8 @@ from django.shortcuts import render
 class ListView(View):
     def get(self, request):
         logger.debug('Entering ListView.get function')
-        user_id = request.GET.get('user_id')
-
-        if user_id and (request.user.is_admin or request.user.is_superuser):
-            logger.debug('Admin/Superuser request')
-            logger.debug('User finding...')
-            user = get_object_or_404(User, id=user_id)
-
-            logger.debug('Preparing File.objects filtered by user...')
-            files = File.objects.filter(user=user)
-            logger.debug('Prepared File.objects filtered by user')
-        else:
-            logger.debug('User request')
-            logger.debug('Getting files filtered by request.user...')
-            files = File.objects.filter(user=request.user)
-            if files:
-                logger.debug('Got files filtered by request.user')
-            else:
-                logger.debug('Files not found by request.user')
-                logger.debug('Setting files empty...')
-                files = []
-                logger.debug('Set files empty')
-
-        logger.debug('Starting file_list preparation...')
-        file_list = []
-        for file in files:
-            file_data = {
-                "id": file.id,
-                "name": file.name,
-                "comment": file.comment,
-                "size": file.size,
-                "upload_date": str(file.upload_date),
-                "last_download_date": str(file.last_download_date)
-            }
-            file_list.append(file_data)
-        file_list = json.dumps(file_list)
-        logger.debug('Finished file_list preparation...')
-
-        logger.debug('Exiting ListView.get function, rendering page and responding with "files": file_list object')
-        return render(request, 'index.html', {'files': file_list})
+        logger.debug('Exiting ListView.get function and rendering page')
+        return render(request, 'index.html')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -122,7 +85,8 @@ class UploadView(View):
         return JsonResponse({'message': 'File uploaded successfully'})
 
     def get(self, request):
-        logger.debug('UploadView.get, rendering page')
+        logger.debug('Entering UploadView.get function')
+        logger.debug('Exiting UploadView.get function and rendering page')
         return render(request, 'index.html')
 
 
@@ -148,7 +112,7 @@ class DeleteView(View):
 @method_decorator(login_required, name='dispatch')
 class RenameView(View):
     def patch(self, request, file_id):
-        logger.debug('Entering RenameView.put function')
+        logger.debug('Entering RenameView.patch function')
         logger.debug('Getting file by id...')
         file = get_object_or_404(File, id=file_id)
 
@@ -167,7 +131,7 @@ class RenameView(View):
             file.save()
             logger.debug('File saved')
 
-            logger.debug('Exiting RenameView.put function and responding with "message": "File renamed successfully"')
+            logger.debug('Exiting RenameView.patch function and responding with "message": "File renamed successfully"')
             return JsonResponse({'message': 'File renamed successfully'})
 
         logger.error('New name not provided')
@@ -181,7 +145,7 @@ class RenameView(View):
 @method_decorator(login_required, name='dispatch')
 class CommentView(View):
     def patch(self, request, file_id):
-        logger.debug('Entering CommentView.put function')
+        logger.debug('Entering CommentView.patch function')
         logger.debug('Getting file by id...')
         file = get_object_or_404(File, id=file_id)
 
@@ -199,7 +163,7 @@ class CommentView(View):
             file.save()
             logger.debug('File saved')
 
-            logger.debug('Exiting CommentView.put function and responding '
+            logger.debug('Exiting CommentView.patch function and responding '
                          'with "message": "Comment updated successfully"')
             return JsonResponse({'message': 'Comment updated successfully'})
 
@@ -268,18 +232,10 @@ class DownloadSpecialView(View):
 
 @method_decorator(login_required, name='dispatch')
 class DetailView(View):
-    def get(self, request, file_id):
-        logger.debug('Entering DetailView.get function')
-        logger.debug('Getting file by id...')
-        file = get_object_or_404(File, id=file_id)
-
-        logger.debug('Got file')
-
-        if not file.user == request.user and not (request.user.is_admin or request.user.is_superuser):
-            logger.error('Access denied')
-            return JsonResponse({'error': 'Access denied'}, status=403)
-        logger.debug('Exiting DetailView.get function and responding with "file": file')
-        return render(request, 'index.html', {'file': file})
+    def get(self, request):
+        logger.debug('Entering GetFilesView.get function')
+        logger.debug('Exiting GetFilesView.get function and rendering page')
+        return render(request, 'index.html')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -305,3 +261,63 @@ class UserShareView(View):
 
         logger.error('No recipient username provided')
         return JsonResponse({'error': 'No recipient username provided'})
+
+
+@method_decorator(login_required, name='dispatch')
+class GetFilesView(View):
+    def get(self, request):
+        logger.debug('Entering GetFilesView.get function')
+        user_id = request.GET.get('user_id')
+
+        if user_id and (request.user.is_admin or request.user.is_superuser):
+            logger.debug('Admin/Superuser request')
+            logger.debug('User finding...')
+            user = get_object_or_404(User, id=user_id)
+
+            logger.debug('Preparing File.objects filtered by user...')
+            files = File.objects.filter(user=user)
+            logger.debug('Prepared File.objects filtered by user')
+        else:
+            logger.debug('User request')
+            logger.debug('Getting files filtered by request.user...')
+            files = File.objects.filter(user=request.user)
+            if files:
+                logger.debug('Got files filtered by request.user')
+            else:
+                logger.debug('Files not found by request.user')
+                logger.debug('Setting files empty...')
+                files = []
+                logger.debug('Set files empty')
+
+        logger.debug('Starting file_list preparation...')
+        file_list = []
+        for file in files:
+            file_data = {
+                "id": file.id,
+                "name": file.name,
+                "comment": file.comment,
+                "size": file.size,
+                "upload_date": str(file.upload_date),
+                "last_download_date": str(file.last_download_date)
+            }
+            file_list.append(file_data)
+        logger.debug('Finished file_list preparation...')
+
+        logger.debug('Exiting GetFilesView.get function, rendering page and responding with "files": file_list object')
+        return JsonResponse({'files': file_list})
+
+
+@method_decorator(login_required, name='dispatch')
+class GetFileView(View):
+    def get(self, request, file_id):
+        logger.debug('Entering GetFileView.get function')
+        logger.debug('Getting file by id...')
+        file = get_object_or_404(File, id=file_id)
+        logger.debug('Got file')
+        if not file.user == request.user and not (request.user.is_admin or request.user.is_superuser):
+            logger.error('Access denied')
+            return JsonResponse({'error': 'Access denied'}, status=403)
+
+        logger.debug('Exiting GetFileView.get function and responding with "file": file')
+        return JsonResponse({'file': file})
+
