@@ -14,6 +14,7 @@ import os
 from django.conf import settings
 from ..logger import logger
 from django.shortcuts import render
+import copy
 
 
 @method_decorator(login_required, name='dispatch')
@@ -318,8 +319,9 @@ class GetFileView(View):
             logger.error('Access denied')
             return JsonResponse({'error': 'Access denied'}, status=403)
         logger.debug('Popping data field from file...')
-        file.pop('data')
+        file_copy = copy.deepcopy(file)
+        del file_copy.data
         logger.debug('Popped data field from file')
         logger.debug('Exiting GetFileView.get function and responding with "file": file')
-        return JsonResponse({'file': file})
+        return JsonResponse({'file': file_copy})
 
