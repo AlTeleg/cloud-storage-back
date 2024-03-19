@@ -319,9 +319,17 @@ class GetFileView(View):
             logger.error('Access denied')
             return JsonResponse({'error': 'Access denied'}, status=403)
         logger.debug('Popping data field from file...')
-        file_copy = copy.deepcopy(file)
-        del file_copy.data
+        file_obj = {
+            'name': file.name,
+            'comment': file.comment,
+            'original_name': file.original_name,
+            'size': file.size,
+            'upload_date': str(file.upload_date),
+            'last_download_date': str(file.last_download_date),
+            'file.special_link': file.special_link
+        }
+
         logger.debug('Popped data field from file')
         logger.debug('Exiting GetFileView.get function and responding with "file": file')
-        return JsonResponse({'file': file_copy})
+        return JsonResponse({'file': file_obj})
 
