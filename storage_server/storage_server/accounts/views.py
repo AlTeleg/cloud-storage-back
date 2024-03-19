@@ -409,7 +409,7 @@ class GetUsersAdminView(View):
         return JsonResponse({'users': user_list})
 
 
-@method_decorator(login_required(login_url='/login', redirect_field_name=None), name='dispatch')
+@method_decorator(login_required(login_url='/login'), name='dispatch')
 class RedirectView(View):
     def get(self, request):
         logger.debug('Entering RedirectView.get function')
