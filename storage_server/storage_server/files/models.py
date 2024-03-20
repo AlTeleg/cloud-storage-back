@@ -22,10 +22,11 @@ class File(models.Model):
     def save(self, *args, **kwargs):
         if not self.name:
             self.name = self.original_name
+        super().save(*args, **kwargs)
         if not self.special_link:
             token = sha256(secrets.token_bytes(16)).hexdigest()
-            self.special_link = f'/files/{self.pk}/download/{token}/'
-        super().save(*args, **kwargs)
+            self.special_link = f'/files/{self.id}/download/{token}/'
+            super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         os.remove(os.path.join(settings.MEDIA_ROOT, str(self.user.id), self.name))
