@@ -102,6 +102,7 @@ class LoginView(View):
 
     def get(self, request):
         csrf_token = get_token(request)
+        logout(request)
         response = render(request, 'index.html')
         response.set_cookie('csrftoken', csrf_token)
         logger.debug('LoginView.get, rendering page and sending csrf_token')
