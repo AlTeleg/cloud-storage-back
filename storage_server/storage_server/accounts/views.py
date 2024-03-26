@@ -146,7 +146,10 @@ class HomeView(View):
 class AllUsersAdminView(View):
     def get(self, request):
         logger.debug('Entering AllUsersAdminView.get function')
-        logger.debug('Exiting AllUsersAdminView.get function and rendering page')
+        if not (request.user.is_admin or request.user.is_superuser):
+            logger.error('Access denied')
+            return JsonResponse({'error': 'Access denied'}, status=403)
+        logger.debug('Exiting AllUsersAdminView.get function and rendering users page')
         return render(request, 'index.html')
 
 
@@ -167,6 +170,18 @@ class AdminView(View):
 class AllFilesAdminView(View):
     def get(self, request):
         logger.debug('Entering AllFilesAdminView.get function')
+        if not (request.user.is_admin or request.user.is_superuser):
+            logger.error('Access denied')
+            return JsonResponse({'error': 'Access denied'}, status=403)
+
+        logger.debug('Exiting AllFilesAdminView.get function and rendering admin files page')
+        return render(request, 'index.html')
+
+
+@method_decorator(login_required, name='dispatch')
+class GetFilesAdminView(View):
+    def get(self, request):
+        logger.debug('Entering GetFilesAdmin.get function')
         if not (request.user.is_admin or request.user.is_superuser):
             logger.error('Access denied')
             return JsonResponse({'error': 'Access denied'}, status=403)
@@ -353,6 +368,9 @@ class CreateUserAdminView(View):
         return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request):
+        if not (request.user.is_admin or request.user.is_superuser):
+            logger.error('Access denied')
+            return JsonResponse({'error': 'Access denied'}, status=403)
         logger.debug('CreateUserAdminView.get, rendering page')
         return render(request, 'index.html')
 

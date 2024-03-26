@@ -29,5 +29,5 @@ class File(models.Model):
             super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        os.remove(os.path.join(settings.MEDIA_ROOT, str(self.user.id), self.name))
+        os.remove(os.path.join(settings.MEDIA_ROOT, str(self.user.id), self.original_name))
         super(File, self).delete(*args, **kwargs)

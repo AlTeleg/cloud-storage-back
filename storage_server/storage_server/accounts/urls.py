@@ -9,6 +9,7 @@ urlpatterns = [
     path('home/', views.HomeView.as_view(), name='home'),
     path('admin/', views.AdminView.as_view(), name='admin'),
     path('admin/files/', views.AllFilesAdminView.as_view(), name='admin-files'),
+    path('admin/get-files/', views.GetFilesAdminView.as_view(), name='admin-files'),
     path('admin/create-user/', views.CreateUserAdminView.as_view(), name='admin-create-user'),
     path('admin/users/', views.AllUsersAdminView.as_view(), name='admin-users'),
     path('admin/users/get/', views.GetUsersAdminView.as_view(), name='admin-get-users'),
