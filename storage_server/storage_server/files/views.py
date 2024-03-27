@@ -14,6 +14,7 @@ import os
 from django.conf import settings
 from ..logger import logger
 from django.shortcuts import render
+import base64
 import copy
 
 
@@ -325,7 +326,7 @@ class GetFileView(View):
             'upload_date': str(file.upload_date),
             'last_download_date': str(file.last_download_date),
             'special_link': file.special_link,
-            'data': file.data,
+            'data': base64.b64encode(file.data),
         }
 
         logger.debug('Popped data field from file')
