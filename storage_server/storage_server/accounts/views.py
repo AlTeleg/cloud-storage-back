@@ -297,6 +297,7 @@ class GetFilesAdminView(View):
         file_list = []
         for file in files:
             file_data = {
+                'id': file.id,
                 'name': file.name,
                 'comment': file.comment,
                 'size': file.size,
@@ -417,9 +418,11 @@ class GetUsersAdminView(View):
         logger.debug('Writing user_data to user_list...')
         for user in users:
             user_data = {
+                'id': user.id,
                 'username': user.username,
                 'full_name': user.full_name,
-                'is_admin': user.is_admin
+                'email': user.email,
+                'is_admin': user.is_admin,
             }
             user_list.append(user_data)
             logger.debug('Finished writing user_data to user_list')

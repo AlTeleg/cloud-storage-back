@@ -25,6 +25,7 @@ class File(models.Model):
         super().save(*args, **kwargs)
         if not self.special_link:
             token = sha256(secrets.token_bytes(16)).hexdigest()
+            self.path = os.path.join(settings.MEDIA_ROOT, str(self.user.id), self.original_name)
             self.special_link = f'/files/{self.id}/download/{token}/'
             super().save(*args, **kwargs)
 

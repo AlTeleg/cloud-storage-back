@@ -317,13 +317,15 @@ class GetFileView(View):
             return JsonResponse({'error': 'Access denied'}, status=403)
         logger.debug('Popping data field from file...')
         file_obj = {
+            'id': file.id,
             'name': file.name,
             'comment': file.comment,
             'original_name': file.original_name,
             'size': file.size,
             'upload_date': str(file.upload_date),
             'last_download_date': str(file.last_download_date),
-            'special_link': file.special_link
+            'special_link': file.special_link,
+            'data': file.data,
         }
 
         logger.debug('Popped data field from file')
