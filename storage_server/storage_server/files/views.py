@@ -326,7 +326,7 @@ class GetFileView(View):
             'upload_date': str(file.upload_date),
             'last_download_date': str(file.last_download_date),
             'special_link': file.special_link,
-            'data': base64.b64encode(file.data),
+            'data': base64.b64encode(file.data).decode('utf-8'),
         }
 
         logger.debug('Popped data field from file')
