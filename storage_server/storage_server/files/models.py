@@ -15,7 +15,7 @@ class File(models.Model):
     upload_date = models.DateTimeField(auto_now_add=True)
     last_download_date = models.DateTimeField(null=True)
     comment = models.TextField(max_length=200)
-    path = models.CharField(max_length=50)
+    path = models.CharField(max_length=100)
     special_link = models.CharField(max_length=255)
     recipients = models.ManyToManyField(User, related_name='shared_files')
 
