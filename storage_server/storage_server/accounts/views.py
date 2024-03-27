@@ -377,12 +377,13 @@ class CreateUserAdminView(View):
 
 @method_decorator(login_required, name='dispatch')
 class DeleteUserAdminView(View):
-    def delete(self, request, user_id):
+    def delete(self, request):
         logger.debug('Entering DeleteUserAdminView.delete function')
         if not (request.user.is_admin or request.user.is_superuser):
             logger.error('Access denied')
             return JsonResponse({'error': 'Access denied'}, status=403)
-
+        path = request.path
+        user_id = path.rsplit('/', 2)[-2]
         logger.debug('Getting user by id...')
         user = get_object_or_404(User, id=user_id)
 
