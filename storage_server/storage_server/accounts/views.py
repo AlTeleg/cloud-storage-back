@@ -297,7 +297,7 @@ class GetFilesAdminView(View):
         file_list = []
         for file in files:
             file_data = {
-                'file_name': file.name,
+                'name': file.name,
                 'comment': file.comment,
                 'size': file.size,
                 'upload_date': str(file.upload_date),
