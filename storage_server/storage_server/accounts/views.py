@@ -342,9 +342,9 @@ class CreateUserAdminView(View):
             return JsonResponse({'error': 'Access denied'}, status=403)
 
         case = 'user'
-        permissions = request.POST.get('permissions')
-        permissions = json.loads(permissions)
         data = json.loads(request.body.decode('utf-8'))
+        permissions = data.get('permissions')
+        print(permissions)
         if permissions.get('is_admin'):
             logger.debug('Setting admin permissions...')
             case = 'admin'
