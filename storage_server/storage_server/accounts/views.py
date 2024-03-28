@@ -207,7 +207,7 @@ class GetFilesAdminView(View):
                 else:
                     logger.debug('Files not found by user_id')
                     logger.debug('Getting user by user_id...')
-                    user = User.objects.filter(user_id=user_id)
+                    user = User.objects.get(user=user_id)
                     if user:
                         logger.debug('Got user')
                         logger.debug('Setting files empty...')
@@ -221,7 +221,7 @@ class GetFilesAdminView(View):
             username = request.GET.get('filter_value')
             if username:
                 logger.debug('Getting user by username...')
-                user = User.objects.filter(username=username)
+                user = User.objects.get(username=username)
                 if user:
                     logger.debug('Got user by username')
                     logger.debug('Getting files filtered by user_id...')
@@ -417,6 +417,10 @@ class DeleteUserAdminView(View):
         user = get_object_or_404(User, id=user_id)
 
         if user:
+            if user.is_superuser:
+                if not request.user.is_superuser:
+                    logger.error('Access denied')
+                    return JsonResponse({'error': 'Access denied'}, status=403)
             logger.debug('Got user by id')
             logger.debug('Deleting user...')
             user.delete()
@@ -450,7 +454,8 @@ class GetUsersAdminView(View):
                 'username': user.username,
                 'full_name': user.full_name,
                 'email': user.email,
-                'is_admin': user.is_admin,
+                'is_admin': 'Yes' if user.is_admin else 'No',
+                'is_superuser': 'Yes' if user.is_superuser else 'No',
             }
             user_list.append(user_data)
             logger.debug('Finished writing user_data to user_list')
