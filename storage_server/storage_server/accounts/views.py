@@ -283,8 +283,8 @@ class GetFilesAdminView(View):
             if last_download_date:
                 try:
                     logger.debug('Getting files filtered by last_download_date...')
-                    upload_date = datetime.strptime(last_download_date, '%d.%m.%Y')
-                    files = files.filter(last_download_date__gte=upload_date)
+                    last_download_date = datetime.strptime(last_download_date, '%d.%m.%Y')
+                    files = files.filter(last_download_date__gte=last_download_date)
                 except ValueError:
                     logger.error('Invalid upload_date format')
                 if files:
@@ -341,18 +341,17 @@ class CreateUserAdminView(View):
             logger.error('Access denied')
             return JsonResponse({'error': 'Access denied'}, status=403)
 
+        case = 'user'
         permissions = request.POST.get('permissions')
         data = json.loads(request.body.decode('utf-8'))
         if permissions == 'admin':
             logger.debug('Setting admin permissions...')
-            data.is_admin = True
-            data.is_superuser = False
+            case = 'admin'
             logger.debug('Set admin permissions')
 
         if permissions == 'superuser':
             logger.debug('Setting superuser permissions...')
-            data.is_admin = True
-            data.is_superuser = True
+            case = 'superuser'
             logger.debug('Set superuser permissions')
 
         data.pop('permissions', None)
@@ -368,7 +367,15 @@ class CreateUserAdminView(View):
             password = data.get('password')
             data.pop('username')
             data.pop('password')
-            new_user = User.objects.create_user(username=username, password=password, **data)
+            if case == 'user':
+                new_user = User.objects.create_user(username=username, password=password, **data)
+            elif case == 'admin':
+                new_user = User.objects.create_admin(username=username, password=password, **data)
+            elif case == 'superuser':
+                if not request.user.is_superuser:
+                    logger.error('Access denied')
+                    return JsonResponse({'error': 'Access denied'}, status=403)
+                new_user = User.objects.create_superuser(username=username, password=password, **data)
             logger.debug('Created new_user from request.data')
             logger.debug('Creating path to user_folder...')
             user_folder = os.path.join(settings.MEDIA_ROOT, str(new_user.id))

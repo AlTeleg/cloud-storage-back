@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import path
 from . import views
 
 urlpatterns = [
@@ -12,6 +12,5 @@ urlpatterns = [
     path('<int:file_id>/comment/', views.CommentView.as_view(), name='file-comment'),
     path('<int:file_id>/download/', views.DownloadView.as_view(), name='file-download'),
     path('<int:file_id>/share/', views.UserShareView.as_view(), name='file-share'),
-    re_path(r'^(?P<file_id>\d+)/download/(?P<token>[a-fA-F0-9]{32})/$', views.DownloadSpecialView.as_view(),
-            name='download-special')
+    path('<int:file_id>/download/<str:token>/', views.DownloadSpecialView.as_view(), name='download-special')
 ]
