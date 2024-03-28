@@ -205,28 +205,29 @@ class DownloadView(View):
 
 
 class DownloadSpecialView(View):
-    def get(self, request, special_link):
+    def get(self, request, special_link, file_id):
         logger.debug('Entering DownloadSpecialView.get function')
         logger.debug('Getting file by special_link...')
         file = get_object_or_404(File, special_link=urlparse(special_link).path)
+        if file_id == file.id:
+            logger.debug('Got file')
 
-        logger.debug('Got file')
+            logger.debug('Updating last_download_date file...')
+            file.last_download_date = datetime.now(timezone.utc)
+            logger.debug('File last_download_date updated')
+            logger.debug('File saving...')
+            file.save()
+            logger.debug('File saved')
 
-        logger.debug('Updating last_download_date file...')
-        file.last_download_date = datetime.now(timezone.utc)
-        logger.debug('File last_download_date updated')
-        logger.debug('File saving...')
-        file.save()
-        logger.debug('File saved')
+            logger.debug('Preparing response with file_data...')
+            response = HttpResponse(file.data, content_type='application/octet-stream')
+            response['Content-Disposition'] = f'attachment; filename="{file.original_name}"'
+            logger.debug('Response with file_data prepared')
 
-        logger.debug('Preparing response with file_data...')
-        response = HttpResponse(file.data, content_type='application/octet-stream')
-        response['Content-Disposition'] = f'attachment; filename="{file.original_name}"'
-        logger.debug('Response with file_data prepared')
+            logger.debug('Exiting DownloadSpecialView.get function'
+                         ' and responding with file_data application/octet-stream')
+            return response
 
-        logger.debug('Exiting DownloadSpecialView.get function'
-                     ' and responding with file_data application/octet-stream')
-        return response
 
 
 @method_decorator(login_required, name='dispatch')
