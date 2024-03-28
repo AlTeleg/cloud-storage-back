@@ -196,12 +196,12 @@ class GetFilesAdminView(View):
 
         filter_field = request.GET.get('filter')
 
-        if filter_field == 'user':
+        if filter_field == 'user_id':
             logger.debug('Filter = user_id case')
             user_id = request.GET.get('filter_value')
             if user_id and user_id.isdigit():
                 logger.debug('Getting files filtered by user_id...')
-                files = files.filter(user_id=user_id)
+                files = files.filter(user=user_id)
                 if files:
                     logger.debug('Got files filtered by user_id')
                 else:
@@ -215,6 +215,19 @@ class GetFilesAdminView(View):
                         logger.debug('Set files empty')
                     else:
                         logger.error('User not found')
+
+        elif filter_field == 'username':
+            logger.debug('Filter = username case')
+            username = request.GET.get('filter_value')
+            if username:
+                logger.debug('Getting user by username...')
+                user = User.objects.filter(username=username)
+                if user:
+                    logger.debug('Got user by username')
+                    logger.debug('Getting files filtered by user_id...')
+                    files = files.filter(user=user.id)
+                else:
+                    logger.error('User not found')
 
         elif filter_field == 'original_name':
             logger.debug('Filter = original_name case')
@@ -253,8 +266,12 @@ class GetFilesAdminView(View):
             logger.debug('Filter = upload_date case')
             upload_date = request.GET.get('filter_value')
             if upload_date:
-                logger.debug('Getting files filtered by upload_date...')
-                files = files.filter(upload_date=upload_date)
+                try:
+                    logger.debug('Getting files filtered by upload_date...')
+                    upload_date = datetime.strptime(upload_date, '%d.%m.%Y')
+                    files = files.filter(upload_date__gte=upload_date)
+                except ValueError:
+                    logger.error('Invalid upload_date format')
                 if files:
                     logger.debug('Got files filtered by upload_date')
                 else:
@@ -264,8 +281,12 @@ class GetFilesAdminView(View):
             logger.debug('Filter = last_download_date case')
             last_download_date = request.GET.get('filter_value')
             if last_download_date:
-                logger.debug('Getting files filtered by last_download_date...')
-                files = files.filter(last_download_date=last_download_date)
+                try:
+                    logger.debug('Getting files filtered by last_download_date...')
+                    upload_date = datetime.strptime(last_download_date, '%d.%m.%Y')
+                    files = files.filter(last_download_date__gte=upload_date)
+                except ValueError:
+                    logger.error('Invalid upload_date format')
                 if files:
                     logger.debug('Got files filtered by last_download_date')
                 else:
@@ -278,8 +299,8 @@ class GetFilesAdminView(View):
             logger.debug('Getting start_date(utc)...')
             start_date = current_date - timedelta(days=1)
             logger.debug('Got current_date')
-            logger.debug('Getting files filtered by last_download_date < 1day...')
-            files = files.filter(last_download_date__gte=start_date)
+            logger.debug('Getting files filtered by upload_date < 1day...')
+            files = files.filter(upload_date__gte=start_date)
             if files:
                 logger.debug('Got files filtered by last_download_date')
             else:
