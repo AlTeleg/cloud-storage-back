@@ -207,7 +207,7 @@ class GetFilesAdminView(View):
                 else:
                     logger.debug('Files not found by user_id')
                     logger.debug('Getting user by user_id...')
-                    user = User.objects.get(user=user_id)
+                    user = User.objects.get(id=user_id)
                     if user:
                         logger.debug('Got user')
                         logger.debug('Setting files empty...')
@@ -344,7 +344,6 @@ class CreateUserAdminView(View):
         case = 'user'
         data = json.loads(request.body.decode('utf-8'))
         permissions = data.get('permissions')
-        print(permissions)
         if permissions.get('is_admin'):
             logger.debug('Setting admin permissions...')
             case = 'admin'
@@ -407,13 +406,11 @@ class CreateUserAdminView(View):
 
 @method_decorator(login_required, name='dispatch')
 class DeleteUserAdminView(View):
-    def delete(self, request):
+    def delete(self, request, user_id):
         logger.debug('Entering DeleteUserAdminView.delete function')
         if not (request.user.is_admin or request.user.is_superuser):
             logger.error('Access denied')
             return JsonResponse({'error': 'Access denied'}, status=403)
-        path = request.path
-        user_id = path.rsplit('/', 2)[-2]
         logger.debug('Getting user by id...')
         user = get_object_or_404(User, id=user_id)
 
