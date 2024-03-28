@@ -44,9 +44,6 @@ class UploadView(View):
         logger.debug('Reading file_content...')
         file_content = file.read()
         logger.debug('Finished reading file_content')
-        logger.debug('Generating token...')
-        token = sha256(secrets.token_bytes(16)).hexdigest()
-        logger.debug('Finished generating token')
         logger.debug('Initiating filename...')
         filename = os.path.join(settings.MEDIA_ROOT, str(request.user.id), file.name)
         logger.debug('Initiated filename')
@@ -205,10 +202,10 @@ class DownloadView(View):
 
 
 class DownloadSpecialView(View):
-    def get(self, request, special_link, file_id):
+    def get(self, request, _, file_id):
         logger.debug('Entering DownloadSpecialView.get function')
         logger.debug('Getting file by special_link...')
-        file = get_object_or_404(File, special_link=urlparse(special_link).path)
+        file = get_object_or_404(File, special_link=request.path)
         if file_id == file.id:
             logger.debug('Got file')
 
@@ -227,7 +224,6 @@ class DownloadSpecialView(View):
             logger.debug('Exiting DownloadSpecialView.get function'
                          ' and responding with file_data application/octet-stream')
             return response
-
 
 
 @method_decorator(login_required, name='dispatch')

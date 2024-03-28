@@ -343,13 +343,14 @@ class CreateUserAdminView(View):
 
         case = 'user'
         permissions = request.POST.get('permissions')
+        permissions = json.loads(permissions)
         data = json.loads(request.body.decode('utf-8'))
-        if permissions.is_admin:
+        if permissions.get('is_admin'):
             logger.debug('Setting admin permissions...')
             case = 'admin'
             logger.debug('Set admin permissions')
 
-        if permissions.is_superuser:
+        if permissions.get('is_superuser'):
             logger.debug('Setting superuser permissions...')
             case = 'superuser'
             logger.debug('Set superuser permissions')
