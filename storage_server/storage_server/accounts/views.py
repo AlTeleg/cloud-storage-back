@@ -310,9 +310,10 @@ class GetFilesAdminView(View):
                 file_list = []
                 return JsonResponse({'files': file_list})
 
-        logger.debug('Starting files order_by sort_filed...')
-        files = files.order_by(sort_field)
-        logger.debug('Finished files order_by sort_filed')
+        if files:
+            logger.debug('Starting files order_by sort_filed...')
+            files = files.order_by(sort_field)
+            logger.debug('Finished files order_by sort_filed')
 
         logger.debug('Starting file_list preparation...')
         file_list = []
