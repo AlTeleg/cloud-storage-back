@@ -18,7 +18,7 @@ import base64
 import copy
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class ListView(View):
     def get(self, request):
         logger.debug('Entering ListView.get function')
@@ -26,7 +26,7 @@ class ListView(View):
         return render(request, 'index.html')
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class UploadView(View):
     def post(self, request):
         logger.debug('Entering UploadView.post function')
@@ -86,7 +86,7 @@ class UploadView(View):
         return render(request, 'index.html')
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class DeleteView(View):
     def delete(self, request, file_id):
         logger.debug('Entering DeleteView.delete function')
@@ -105,7 +105,7 @@ class DeleteView(View):
         return JsonResponse({'message': 'File deleted successfully'})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class RenameView(View):
     def patch(self, request, file_id):
         logger.debug('Entering RenameView.patch function')
@@ -138,7 +138,7 @@ class RenameView(View):
         return render(request, 'index.html')
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class CommentView(View):
     def patch(self, request, file_id):
         logger.debug('Entering CommentView.patch function')
@@ -171,7 +171,7 @@ class CommentView(View):
         return render(request, 'index.html')
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class DownloadView(View):
     def get(self, request, file_id):
         logger.debug('Entering DownloadView.get function')
@@ -226,7 +226,7 @@ class DownloadSpecialView(View):
             return response
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class DetailView(View):
     def get(self, request):
         logger.debug('Entering GetFilesView.get function')
@@ -234,7 +234,7 @@ class DetailView(View):
         return render(request, 'index.html')
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class UserShareView(View):
     def post(self, request, file_id):
         logger.debug('Entering UserShareView.post function')
@@ -259,7 +259,7 @@ class UserShareView(View):
         return JsonResponse({'error': 'No recipient username provided'})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class GetFilesView(View):
     def get(self, request):
         logger.debug('Entering GetFilesView.get function')
@@ -303,7 +303,7 @@ class GetFilesView(View):
         return JsonResponse({'files': file_list})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class GetFileView(View):
     def get(self, request, file_id):
         logger.debug('Entering GetFileView.get function')

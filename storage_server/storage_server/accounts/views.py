@@ -129,7 +129,7 @@ class LogoutView(View):
         return render(request, 'index.html')
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class HomeView(View):
     def get(self, request):
         logger.debug('Entering HomeView.get function')
@@ -142,7 +142,7 @@ class HomeView(View):
         return render(request, 'index.html')
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class AllUsersAdminView(View):
     def get(self, request):
         logger.debug('Entering AllUsersAdminView.get function')
@@ -153,7 +153,7 @@ class AllUsersAdminView(View):
         return render(request, 'index.html')
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class AdminView(View):
     def get(self, request):
         logger.debug('Entering AdminView.get function')
@@ -166,7 +166,7 @@ class AdminView(View):
         return render(request, 'index.html')
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class AllFilesAdminView(View):
     def get(self, request):
         logger.debug('Entering AllFilesAdminView.get function')
@@ -178,7 +178,7 @@ class AllFilesAdminView(View):
         return render(request, 'index.html')
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class GetFilesAdminView(View):
     def get(self, request):
         logger.debug('Entering GetFilesAdmin.get function')
@@ -334,7 +334,7 @@ class GetFilesAdminView(View):
         return JsonResponse({'files': file_list})
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class CreateUserAdminView(View):
     def post(self, request):
         logger.debug('Entering CreateUserAdminView.post function')
@@ -405,7 +405,7 @@ class CreateUserAdminView(View):
         return render(request, 'index.html')
 
 
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class DeleteUserAdminView(View):
     def delete(self, request, user_id):
         logger.debug('Entering DeleteUserAdminView.delete function')
@@ -433,7 +433,7 @@ class DeleteUserAdminView(View):
         return JsonResponse({'error': 'User not found by id'})
 
 
-@method_decorator(login_required(login_url='/login'), name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class GetUsersAdminView(View):
     def get(self, request):
         logger.debug('Entering GetUsersAdminView.get function')
@@ -464,7 +464,7 @@ class GetUsersAdminView(View):
         return JsonResponse({'users': user_list})
 
 
-@method_decorator(login_required(login_url='/login', redirect_field_name=None), name='dispatch')
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class RedirectView(View):
     def get(self, request):
         logger.debug('Entering RedirectView.get function')
