@@ -93,8 +93,7 @@ class LoginView(View):
             login(request, user)
             logger.debug('Finished login user')
 
-            logger.debug('Exiting LoginView.post function and responding '
-                         'with "message": "Authentication successful"')
+            logger.debug('Exiting LoginView.post function and redirecting home')
             return redirect('/home/')
         else:
             logger.error('Invalid credentials')

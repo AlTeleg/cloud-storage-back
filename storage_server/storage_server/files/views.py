@@ -7,15 +7,11 @@ from django.views import View
 from .models import File
 from ..accounts.models import User
 from datetime import datetime, timezone
-from hashlib import sha256
-import secrets
-from urllib.parse import urlparse
 import os
 from django.conf import settings
 from ..logger import logger
 from django.shortcuts import render
 import base64
-import copy
 
 
 @method_decorator(login_required(login_url='/login/'), name='dispatch')
@@ -329,4 +325,3 @@ class GetFileView(View):
         logger.debug('Popped data field from file')
         logger.debug('Exiting GetFileView.get function and responding with "file": file')
         return JsonResponse({'file': file_obj})
-
