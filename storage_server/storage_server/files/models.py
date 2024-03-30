@@ -9,8 +9,8 @@ from django.conf import settings
 class File(models.Model):
     data = models.BinaryField()
     user = models.ForeignKey(User, related_name='files', on_delete=models.CASCADE)
-    original_name = models.CharField(max_length=70)
-    name = models.CharField(max_length=70, null=True)
+    original_name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, null=True)
     size = models.IntegerField()
     upload_date = models.DateTimeField(auto_now_add=True)
     last_download_date = models.DateTimeField(null=True)
