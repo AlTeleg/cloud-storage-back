@@ -2,6 +2,7 @@ Django
 djangorestframework
 django-filter
 django-environ
+django-session-timeout
 psycopg2-binary
 filetype
 gunicorn
