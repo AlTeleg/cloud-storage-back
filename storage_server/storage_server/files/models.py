@@ -19,12 +19,13 @@ class File(models.Model):
     special_link = models.CharField(max_length=255)
 
     def save(self, *args, **kwargs):
+        if not self.path:
+            self.path = os.path.join(settings.MEDIA_ROOT, str(self.user.id), self.original_name)
         if not self.name:
             self.name = self.original_name
         super().save(*args, **kwargs)
         if not self.special_link:
             token = sha256(secrets.token_bytes(16)).hexdigest()
-            self.path = os.path.join(settings.MEDIA_ROOT, str(self.user.id), self.original_name)
             self.special_link = f'/files/{self.id}/download/{token}/'
             super().save(*args, **kwargs)
 
