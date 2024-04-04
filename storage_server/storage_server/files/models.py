@@ -17,7 +17,6 @@ class File(models.Model):
     comment = models.TextField(max_length=200)
     path = models.CharField(max_length=100)
     special_link = models.CharField(max_length=255)
-    recipients = models.ManyToManyField(User, related_name='shared_files')
 
     def save(self, *args, **kwargs):
         if not self.name:
