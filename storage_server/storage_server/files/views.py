@@ -176,8 +176,7 @@ class DownloadView(View):
 
         logger.debug('Got file')
 
-        if file.user != request.user and request.user not in file.recipients.all() and \
-                not (request.user.is_admin or request.user.is_superuser):
+        if file.user != request.user and not (request.user.is_admin or request.user.is_superuser):
             logger.error('Access denied')
             return JsonResponse({'error': 'Access denied'}, status=403)
         logger.debug('Updating last_download_date file...')
