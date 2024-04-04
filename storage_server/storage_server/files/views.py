@@ -230,6 +230,22 @@ class DetailView(View):
 
 
 @method_decorator(login_required(login_url='/login/'), name='dispatch')
+class NewSpecialLinkView(View):
+    def patch(self, request, file_id):
+        logger.debug('Entering NewSpecialLinkView.get function')
+        file = get_object_or_404(File, id=file_id)
+        if not file.user == request.user and not (request.user.is_admin or request.user.is_superuser):
+            logger.error('Access denied')
+            return JsonResponse({'error': 'Access denied'}, status=403)
+        logger.debug('Deleting old link and saving file with new link...')
+        file.special_link = None
+        file.save()
+        logger.debug('Deleted old link and saved file with new link')
+        logger.debug('Exiting NewSpecialLinkView.get function and rendering page')
+        return JsonResponse({'message': 'New special link generated!'})
+
+
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class GetFilesView(View):
     def get(self, request):
         logger.debug('Entering GetFilesView.get function')
