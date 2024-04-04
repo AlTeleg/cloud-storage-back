@@ -238,7 +238,7 @@ class NewSpecialLinkView(View):
             logger.error('Access denied')
             return JsonResponse({'error': 'Access denied'}, status=403)
         logger.debug('Deleting old link and saving file with new link...')
-        file.special_link = None
+        file.special_link = ''
         file.save()
         logger.debug('Deleted old link and saved file with new link')
         logger.debug('Exiting NewSpecialLinkView.get function and rendering page')
