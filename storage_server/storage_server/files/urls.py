@@ -11,6 +11,5 @@ urlpatterns = [
     path('<int:file_id>/rename/', views.RenameView.as_view(), name='file-rename'),
     path('<int:file_id>/comment/', views.CommentView.as_view(), name='file-comment'),
     path('<int:file_id>/download/', views.DownloadView.as_view(), name='file-download'),
-    path('<int:file_id>/share/', views.UserShareView.as_view(), name='file-share'),
     path('<int:file_id>/download/<str:_>/', views.DownloadSpecialView.as_view(), name='download-special')
 ]

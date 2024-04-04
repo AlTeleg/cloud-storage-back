@@ -231,31 +231,6 @@ class DetailView(View):
 
 
 @method_decorator(login_required(login_url='/login/'), name='dispatch')
-class UserShareView(View):
-    def post(self, request, file_id):
-        logger.debug('Entering UserShareView.post function')
-        logger.debug('Getting file by id...')
-        file = get_object_or_404(File, id=file_id)
-
-        logger.debug('Got file')
-
-        recipient_username = request.POST.get('recipient_username')
-        if recipient_username:
-            logger.debug('Adding recipient_username to recipients...')
-            file.recipients.add(recipient_username)
-            logger.debug('Added recipient_username to recipients')
-            logger.debug('File saving...')
-            file.save()
-            logger.debug('File saved')
-
-            logger.debug('Exiting UserShareView.post function and responding with "files": file_list object')
-            return JsonResponse({'message': 'File shared successfully'})
-
-        logger.error('No recipient username provided')
-        return JsonResponse({'error': 'No recipient username provided'})
-
-
-@method_decorator(login_required(login_url='/login/'), name='dispatch')
 class GetFilesView(View):
     def get(self, request):
         logger.debug('Entering GetFilesView.get function')
