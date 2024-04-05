@@ -326,7 +326,7 @@ class GetFilesAdminView(View):
                 'last_download_date': str(file.last_download_date)
             }
             file_list.append(file_data)
-            logger.debug('Finished file_list preparation')
+        logger.debug('Finished file_list preparation')
 
         logger.debug('Exiting AllFilesAdminView.get function and  responding '
                      'with "files": file_list')
@@ -456,7 +456,7 @@ class GetUsersAdminView(View):
                 'is_superuser': 'Yes' if user.is_superuser else 'No',
             }
             user_list.append(user_data)
-            logger.debug('Finished writing user_data to user_list')
+        logger.debug('Finished writing user_data to user_list')
 
         logger.debug('Exiting GetUsersAdminView.get function and responding '
                      'with "users": user_list')
