@@ -405,31 +405,42 @@ class CreateUserAdminView(View):
 
 
 @method_decorator(login_required(login_url='/login/'), name='dispatch')
-class DeleteUserAdminView(View):
+class ChangeUserAdminView(View):
     def delete(self, request, user_id):
-        logger.debug('Entering DeleteUserAdminView.delete function')
+        logger.debug('Entering ChangeUserAdminView.delete function')
         if not (request.user.is_admin or request.user.is_superuser):
             logger.error('Access denied')
             return JsonResponse({'error': 'Access denied'}, status=403)
         logger.debug('Getting user by id...')
         user = get_object_or_404(User, id=user_id)
 
-        if user:
-            if user.is_superuser:
-                if not request.user.is_superuser:
-                    logger.error('Access denied')
-                    return JsonResponse({'error': 'Access denied'}, status=403)
-            logger.debug('Got user by id')
-            logger.debug('Deleting user...')
-            user.delete()
-            logger.debug('Deleted user')
+        if user.is_superuser:
+            if not request.user.is_superuser:
+                logger.error('Access denied')
+                return JsonResponse({'error': 'Access denied'}, status=403)
+        logger.debug('Got user by id')
+        logger.debug('Deleting user...')
+        user.delete()
+        logger.debug('Deleted user')
 
-            logger.debug('Exiting DeleteUserAdminView.delete function and responding '
-                         'with "message": "User deleted successfully"')
-            return JsonResponse({'message': 'User deleted successfully'})
+        logger.debug('Exiting ChangeUserAdminView.delete function and responding '
+                     'with "message": "User deleted successfully"')
+        return JsonResponse({'message': 'User deleted successfully'})
 
-        logger.error('User not found by id')
-        return JsonResponse({'error': 'User not found by id'})
+    def patch(self, request, user_id):
+        logger.debug('Entering ChangeUserAdminView.patch function')
+        if not (request.user.is_admin or request.user.is_superuser):
+            logger.error('Access denied')
+            return JsonResponse({'error': 'Access denied'}, status=403)
+        logger.debug('Getting user by id...')
+        user = get_object_or_404(User, id=user_id)
+        logger.debug('Toggling user.is_admin...')
+        user.is_admin = not user.is_admin
+        user.save()
+        logger.debug('Toggled user.is_admin')
+        logger.debug('Exiting ChangeUserAdminView.patch function and responding '
+                     'with "message": "User rights updated successfully"')
+        return JsonResponse({'message': 'User rights updated successfully'})
 
 
 @method_decorator(login_required(login_url='/login/'), name='dispatch')
